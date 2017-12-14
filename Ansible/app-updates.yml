@@ -1,0 +1,66 @@
+# ansible-playbook -i hosts app-updates.yml --limit prod
+#
+#   -i            = hosts file
+#   -l            = limit to one host out of 
+#   --check       = Dry run
+
+---
+- hosts: vagrant
+
+  vars_prompt:
+    - name: "ansible_sudo_pass"
+      prompt: "Sudo password"
+      private: yes
+
+  tasks:
+    - name: Test connection
+      ping:
+
+    - name: Install default apps
+      apt: pkg={{ item }} state=latest
+      with_items:
+        - aptitude
+        - bash-completion
+        - curl
+        - git
+        - openssh-client
+        - openssh-server
+        - open-vm-tools
+        - wget
+        - vim
+      become: true
+    
+    - name: Update and upgrade all apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 # One day
+      become: true
+
+    - name: Upgrade distribtuion
+      apt:
+        upgrade: dist
+        update_cache: yes
+        cache_valid_time: 3600
+      become: true
+
+    # - name: verify if a reboot is required after upgrade
+    #   stat: path=/var/run/reboot-required
+    #   register: reboot_required
+
+    # - name: reboot system
+    #   shell: sleep 2 && shutdown -r now
+    #   async: 1
+    #   poll: 0
+    #   ignore_errors: true
+    #   become: true
+    #   when: reboot_required.stat.exists
+
+    # - name: wait for server to come back
+    #   local_action:
+    #     module: wait_for
+    #       host={{ inventory_hostname }}
+    #       state=started
+    #       delay=5
+    #       timeout=30
+    #   when: reboot_required.stat.exists
