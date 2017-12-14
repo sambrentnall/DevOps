@@ -44,23 +44,11 @@
         cache_valid_time: 3600
       become: true
 
-    # - name: verify if a reboot is required after upgrade
-    #   stat: path=/var/run/reboot-required
-    #   register: reboot_required
-
-    # - name: reboot system
-    #   shell: sleep 2 && shutdown -r now
-    #   async: 1
-    #   poll: 0
-    #   ignore_errors: true
-    #   become: true
-    #   when: reboot_required.stat.exists
-
-    # - name: wait for server to come back
-    #   local_action:
-    #     module: wait_for
-    #       host={{ inventory_hostname }}
-    #       state=started
-    #       delay=5
-    #       timeout=30
-    #   when: reboot_required.stat.exists
+    - name: verify if a reboot is required after upgrade
+      stat: path=/var/run/reboot-required1
+      register: reboot_required
+    
+    - debug:
+        msg: "Reboot required, rebooting..."
+      when: reboot_required.stat.exists
+      
