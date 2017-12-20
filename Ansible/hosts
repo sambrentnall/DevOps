@@ -1,8 +1,27 @@
 [prod]
 nzb.sb.local
 pihole.sb.local
+dockerhost1 ansible_python_interpreter=/usr/bin/python3
 
 [prod:vars]
+ansible_connection=ssh
+ansible_user=sambrentnall
+ansible_ssh_private_key_file="/Users/sambrentnall/.ssh/id_rsa"
+
+[cloud]
+rixter.net
+
+[cloud:vars]
+ansible_connection=ssh
+ansible_port=2525
+ansible_user=sambrentnall
+ansible_ssh_private_key_file="/Users/sambrentnall/.ssh/id_rsa"
+ansible_python_interpreter=/usr/bin/python3
+
+[ilo]
+192.168.0.20
+
+[ilo:vars]
 ansible_connection=ssh
 ansible_user=sambrentnall
 ansible_ssh_private_key_file="/Users/sambrentnall/.ssh/id_rsa"

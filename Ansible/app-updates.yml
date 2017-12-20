@@ -5,7 +5,7 @@
 #   --check       = Dry run
 
 ---
-- hosts: vagrant
+- hosts: ilo
 
   vars_prompt:
     - name: "ansible_sudo_pass"

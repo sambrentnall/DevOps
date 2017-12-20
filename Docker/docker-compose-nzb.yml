@@ -1,0 +1,83 @@
+version: '3'
+services:
+  sonarr:
+    image: linuxserver/sonarr:latest
+    restart: unless-stopped
+    networks:
+      main:
+        aliases:
+          - sonarr
+
+    volumes:
+      - /mnt/AppData/sonarr-config:/config
+      - /mnt/tv:/tv
+      - /mnt/AppData/nzbget-downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+
+    ports:
+      - 8989:8989
+      - 9898:9898
+    
+    environment:
+      - PGID=0
+      - PUID=0
+
+  radarr:
+    image: linuxserver/radarr:latest
+    restart: unless-stopped
+    networks:
+      main:
+        aliases:
+          - radarr
+
+    volumes:
+      - /mnt/AppData/radarr-config:/config
+      - /mnt/movies:/movies
+      - /mnt/AppData/nzbget-downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+
+    ports:
+      - 7878:7878
+    
+    environment:
+      - PGID=0
+      - PUID=0
+
+  nzbget:
+    image: linuxserver/nzbget:latest
+    restart: unless-stopped
+    networks:
+      main:
+        aliases:
+          - nzbget
+
+    volumes:
+      - /mnt/AppData/nzbget-config:/config
+      - /mnt/AppData/nzbget-downloads:/downloads
+      - /etc/localtime:/etc/localtime:ro
+
+    ports:
+      - 6789:6789
+    
+    environment:
+      - PGID=0
+      - PUID=0
+
+  plexpy:
+    image: linuxserver/plexpy:latest
+    restart: unless-stopped
+
+    volumes:
+      - /mnt/AppData/plexpy/config:/config
+      - /mnt/AppData/plexpy/logs:/logs
+      - /etc/localtime:/etc/localtime:ro
+
+    ports:
+      - 8181:8181
+    
+    environment:
+      - PGID=0
+      - PUID=0
+
+networks:
+  main:
